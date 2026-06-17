@@ -66,8 +66,19 @@ export function useFocusedViews() {
   );
   const [isCollapsed, setIsCollapsed] = useSyncedPrefJson<boolean>(
     'budget.focusedViewsCollapsed',
-    false,
+    true,
   );
+
+  const [budgetType = 'envelope'] = useSyncedPref('budgetType');
+
+  useEffect(() => {
+    if (
+      budgetType === 'tracking' &&
+      activeViewId === BUILT_IN_VIEWS.MONEY_AVAILABLE
+    ) {
+      setActiveViewId(null);
+    }
+  }, [budgetType, activeViewId, setActiveViewId]);
 
   const views = useMemo(
     () =>
@@ -172,8 +183,12 @@ export function useFocusedViews() {
     // Clean up deleted views
     nextOrder = nextOrder.filter(id => allExpectedIds.includes(id));
 
+    if (budgetType === 'tracking') {
+      nextOrder = nextOrder.filter(id => id !== BUILT_IN_VIEWS.MONEY_AVAILABLE);
+    }
+
     return nextOrder;
-  }, [storedViewOrder, builtInViewsOrder, views]);
+  }, [storedViewOrder, builtInViewsOrder, views, budgetType]);
 
   const saveViewOrder = useCallback(
     (nextOrder: string[]) => {

@@ -343,6 +343,7 @@ export default defineConfig(async ({ mode, command }) => {
     },
     server: {
       host: true,
+      allowedHosts: ['wing-laptop.tailc589be.ts.net'],
       headers: devHeaders,
       port: +env.PORT || 5173,
       open: env.BROWSER

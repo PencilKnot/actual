@@ -52,6 +52,7 @@ export const MonthPicker = ({
   const { t } = useTranslation();
   const [hoverId, setHoverId] = useState(null);
   const [targetMonthCount, setTargetMonthCount] = useState(12);
+  const [isHoveringPicker, setIsHoveringPicker] = useState(false);
   const { isCollapsed, setCollapsed } = useFocusedViews();
 
   // Measure the real pixel offset from the MonthPicker root to the first month
@@ -170,6 +171,8 @@ export const MonthPicker = ({
   return (
     <View
       innerRef={pickerRootRef}
+      onMouseEnter={() => setIsHoveringPicker(true)}
+      onMouseLeave={() => setIsHoveringPicker(false)}
       style={{
         flexDirection: 'row',
         alignItems: 'center',
@@ -367,6 +370,14 @@ export const MonthPicker = ({
           style={{
             padding: '3px 3px',
             marginLeft: 15,
+            opacity: isHoveringPicker ? 1 : 0,
+            transition: 'opacity 0.25s ease-in-out',
+            '&[data-hovered]': {
+              backgroundColor: 'transparent',
+            },
+            '&[data-pressed]': {
+              backgroundColor: 'transparent',
+            },
           }}
         >
           <View innerRef={collapseIconRefCallback}>
